@@ -27,6 +27,51 @@ def gerar_relatorio_txt(dados, nome_arquivo):
     except Exception as e:
         print(f"Erro ao gerar relatório: {e}")
 
+def gerar_relatorio_html(dados, nome_arquivo):
+    try:
+        with open(nome_arquivo, 'w') as arquivo:
+            html = """
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 40px; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .registro { border: 1px solid #ddd; margin: 10px 0; padding: 10px; }
+                    .footer { text-align: center; margin-top: 30px; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>RELATÓRIO</h1>
+                    <p>Data: {}</p>
+                </div>
+            """.format(datetime.now().strftime('%d/%m/%Y %H:%M'))
+
+            for i, item in enumerate(dados, 1):
+                html += """
+                <div class="registro">
+                    <h3>Registro #{i}</h3>
+                    <p><strong>Nome:</strong> {item['nome']}</p>
+                    <p><strong>Idade:</strong> {item['idade']}</p>
+                    <p><strong>Cidade:</strong> {item['cidade']}</p>
+                </div>
+                """
+
+            html += f"""
+                <div class="footer">
+                    <p>Total de registros: {len(dados)}</p>
+                    <p>Fim do Relatório</p>
+                </div>
+            </body>
+            </html>
+            """
+
+            arquivo.write(html)
+        print(f"\nRelatório HTML gerado com sucesso: {nome_arquivo}")
+
+    except Exception as e:
+        print(f"\nErro ao gerar relatório HTML: {e}")
+
 def inserir_dados():
     dados = []
     while True:
@@ -57,8 +102,9 @@ def main():
     while True:
         print("\n=== Gerador de Relatórios ===")
         print("1. Inserir dados")
-        print("2.Gerar relatório")
-        print("3. Sair")
+        print("2. Gerar relatório TXT")
+        print("3. Gerar relatório HTML")
+        print("4. Sair")
 
         opcao = input("\nEscolha uma opção: ").strip()
 
@@ -77,6 +123,17 @@ def main():
             gerar_relatorio_txt(dados, nome_arquivo)
 
         elif opcao == "3":
+            if not dados:
+                print("\nNenhum dado inserido!")
+                continue
+
+            nome_arquivo = input("\nNome do arquivo (ex: relatorio.html): ").strip()
+            if not nome_arquivo.endswith('.html'):
+                nome_arquivo += '.html'
+                
+            gerar_relatorio_html(dados, nome_arquivo)
+
+        elif opcao == "4":
             print("\nObrigado por usar o Gerador de Relatórios!")
             break
 
