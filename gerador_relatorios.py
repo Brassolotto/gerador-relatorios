@@ -29,48 +29,69 @@ def gerar_relatorio_txt(dados, nome_arquivo):
 
 def gerar_relatorio_html(dados, nome_arquivo):
     try:
-        with open(nome_arquivo, 'w') as arquivo:
-            html = """
+        with open(nome_arquivo, 'w', encoding='utf-8') as arquivo:
+            # Início do HTML
+            arquivo.write("""
             <html>
             <head>
+                <meta charset="utf-8">
                 <style>
-                    body { font-family: Arial, sans-serif; margin: 40px; }
-                    .header { text-align: center; margin-bottom: 30px; }
-                    .registro { border: 1px solid #ddd; margin: 10px 0; padding: 10px; }
-                    .footer { text-align: center; margin-top: 30px; }
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 40px; 
+                    }
+                    .header { 
+                        text-align: center; 
+                        margin-bottom: 30px; 
+                    }
+                    .registro { 
+                        border: 1px solid #ddd; 
+                        margin: 10px 0; 
+                        padding: 10px; 
+                    }
+                    .footer { 
+                        text-align: center; 
+                        margin-top: 30px; 
+                    }
                 </style>
             </head>
             <body>
+            """)
+
+            # Cabeçalho
+            arquivo.write(f"""
                 <div class="header">
                     <h1>RELATÓRIO</h1>
-                    <p>Data: {}</p>
+                    <p>Data: {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
                 </div>
-            """.format(datetime.now().strftime('%d/%m/%Y %H:%M'))
+            """)
 
+            # Registros
             for i, item in enumerate(dados, 1):
-                html += """
+                arquivo.write(f"""
                 <div class="registro">
                     <h3>Registro #{i}</h3>
                     <p><strong>Nome:</strong> {item['nome']}</p>
                     <p><strong>Idade:</strong> {item['idade']}</p>
                     <p><strong>Cidade:</strong> {item['cidade']}</p>
                 </div>
-                """
+                """)
 
-            html += f"""
+            # Rodapé
+            arquivo.write(f"""
                 <div class="footer">
                     <p>Total de registros: {len(dados)}</p>
                     <p>Fim do Relatório</p>
                 </div>
             </body>
             </html>
-            """
+            """)
 
-            arquivo.write(html)
         print(f"\nRelatório HTML gerado com sucesso: {nome_arquivo}")
 
     except Exception as e:
         print(f"\nErro ao gerar relatório HTML: {e}")
+
 
 def inserir_dados():
     dados = []
@@ -99,6 +120,7 @@ def inserir_dados():
     return dados
 
 def main():
+    dados = []
     while True:
         print("\n=== Gerador de Relatórios ===")
         print("1. Inserir dados")
@@ -130,7 +152,7 @@ def main():
             nome_arquivo = input("\nNome do arquivo (ex: relatorio.html): ").strip()
             if not nome_arquivo.endswith('.html'):
                 nome_arquivo += '.html'
-                
+
             gerar_relatorio_html(dados, nome_arquivo)
 
         elif opcao == "4":
